@@ -19,6 +19,8 @@
   "homepage": "https://github.com/ezinkow/Employee-Tracker#readme",
   "dependencies": {
     "inquirer": "^7.3.3",
-    "mysql": "^2.18.1"
+    "mysql": "^2.18.1",
+    "npm-start-command": "^1.0.1",
+    "start": "^5.1.0"
   }
 }

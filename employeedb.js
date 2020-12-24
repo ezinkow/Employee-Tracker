@@ -17,8 +17,6 @@ var connection = mysql.createConnection({
 
 connection.connect(function (err) {
     if (err) throw err;
-    console.log("connected as id " + connection.threadId + "\n");
-    // addEmployees()
 });
 
 function questions() {
@@ -32,18 +30,6 @@ function questions() {
                 "Add",
                 "Remove",
                 "Update"
-                // "View all employees",
-                // "View all employees by Department",
-                // "View all departments",
-                // "View all employees by Manager",
-                // "View all employees by Role",
-                // "Add employee",
-                // "Add department",
-                // "Add role",
-                // "Remove employee",
-                // "Remove department",
-                // "Remove role",
-                // "Update employee"
             ]
         })
 
@@ -61,14 +47,6 @@ function questions() {
                 case "Update":
                     update();
                     break;
-
-
-
-                // case "Update employee":
-                //     updateEmployee();
-                // case "exit":
-                //     connection.end();
-                //     break;
             }
 
         })
@@ -210,14 +188,12 @@ function addEmployee() {
             {
                 name: "manager",
                 type: "input",
-                message: "Employee's manager ID?"
+                message: "Employee's manager ID? (0 for none)"
             }
         ])
 
         .then(function (answer) {
             var query = "INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES(?,?,?,?)";
-            console.log(typeof (Number(answer.role)))
-            console.log(typeof (Number(answer.manager)))
             connection.query(query,
                 [answer.firstName, answer.lastName, Number(answer.role), Number(answer.manager)], (err, res) => {
                     if (err) throw err;
@@ -273,7 +249,7 @@ function addRole() {
             var query = "INSERT INTO role (title, salary, department_id) VALUES(?,?,?)";
             connection.query(query, [answer.roleName, answer.salary, Number(answer.departmentID)], (err, res) => {
                 if (err) throw err;
-                console.log("Department added")
+                console.log("Role added")
                 console.table(res)
                 questions()
             })
@@ -319,7 +295,7 @@ function removeEmployee() {
         ])
 
         .then(function (answer) {
-            var query = "DELETE FROM employees WHERE id=? AND ?";
+            var query = "DELETE FROM employees WHERE id=?";
             connection.query(query, [Number(answer.selectEmployeeId)], (err, res) => {
                 if (err) throw err;
                 console.log("Employee deleted")
@@ -427,6 +403,7 @@ function updateFirstName() {
             var query = "UPDATE employees SET first_name = ? WHERE id=?";
             connection.query(query, [answer.newFirstName, Number(answer.selectEmployeeId)], (err, res) => {
                 if (err) throw err;
+                console.log("Employee updated")
                 console.table(res)
                 questions()
             })
@@ -452,6 +429,7 @@ function updateLastName() {
             var query = "UPDATE employees SET last_name = ? WHERE id=?";
             connection.query(query, [answer.newLastName, Number(answer.selectEmployeeId)], (err, res) => {
                 if (err) throw err;
+                console.log("Employee updated")
                 console.table(res)
                 questions()
             })
@@ -477,6 +455,7 @@ function updateRole() {
             var query = "UPDATE employees SET role_id = ? WHERE id=?";
             connection.query(query, [Number(answer.newRole), Number(answer.selectEmployeeId)], (err, res) => {
                 if (err) throw err;
+                console.log("Role updated")
                 console.table(res)
                 questions()
             })
@@ -502,6 +481,7 @@ function updateRoleDepartment() {
             var query = "UPDATE role SET department_id = ? WHERE id=?";
             connection.query(query, [Number(answer.newDepartment), Number(answer.selectRoleId)], (err, res) => {
                 if (err) throw err;
+                console.log("Department updated")
                 console.table(res)
                 questions()
             })
@@ -526,6 +506,7 @@ function updateManager() {
             var query = "UPDATE employees SET manager_id = ? WHERE id=?";
             connection.query(query, [Number(answer.newManager), Number(answer.selectEmployeeId)], (err, res) => {
                 if (err) throw err;
+                console.log("Manager updated")
                 console.table(res)
                 questions()
             })

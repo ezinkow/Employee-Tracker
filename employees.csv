@@ -1,8 +1,0 @@
-employee_id, first_name, last_name, title, department, salary, manager, role_id, department_id, manager_id
-1, John, Doe, Sales Lead, Sales, 100000, Ashley Rodriguez, 1, 1, 3
-2, Mike, Chan, Salesperson, Sales, 80000, John Doe, 2, 1, 1
-3, Ashley, Rodriguez, Lead Engineer, Engineering, 150000, null, 3, 2, 99
-4, Kevin, Tupik, Software Engineer, Engineering, 120000, Ashley Rodriguez, 4, 2, 3
-5, Malia, Brown, Accountant, Finance, 125000, null, 5, 3, 99
-6, Sarah, Lourd, Legal Team Lead, Legal, 250000, null, 6, 4, 99
-7, Tom, Allen, Lawyer, Legal, 190000, Sarah Lourd, 7, 4, 6
