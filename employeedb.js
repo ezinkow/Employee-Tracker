@@ -68,7 +68,8 @@ function view() {
                 "View all roles",
                 "View all employees by department",
                 "View all employees by manager",
-                "View all employees by role"
+                "View all employees by role",
+                "View department total utilized budget"
             ]
         })
 
@@ -94,6 +95,9 @@ function view() {
                     break;
                 case "View all employees by role":
                     viewRoles();
+                    break;
+                case "View department total utilized budget":
+                    totalUtilizedBudget();
                     break;
 
             }
@@ -167,6 +171,24 @@ function viewRoles() {
         console.table(res)
         questions()
     })
+}
+
+function totalUtilizedBudget() {
+    inquirer
+        .prompt({
+            name: "selectDepartment",
+            type: "input",
+            message: "Which department (by ID) would you like the total utilized budget?"
+        })
+
+        .then(function (answer) {
+            var query = "SELECT SUM(salary) AS 'Total Utilized Budget:' FROM Role INNER JOIN employees ON role.id = employees.role_id WHERE department_id = ?";
+            connection.query(query, [answer.selectDepartment], (err, res) => {
+                if (err) throw err;
+                console.table(res)
+                questions()
+            })
+        })
 }
 
 function add() {
@@ -541,3 +563,6 @@ function updateManager() {
             })
         })
 }
+
+
+
