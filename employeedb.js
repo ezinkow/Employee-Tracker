@@ -61,19 +61,30 @@ function view() {
             type: "rawlist",
             message: "What would you like to view?",
             choices: [
-                "View all employees",
+                "View all employees by ID",
+                "View all employees by last name",
+                "View all departments",
+                "View all roles",
                 "View all employees by department",
                 "View all employees by manager",
-                "View all employees by role",
-                "View all departments"
+                "View all employees by role"
             ]
         })
 
         .then(function (view) {
             switch (view.viewWhat) {
-                case "View all employees":
+                case "View all employees by ID":
                     viewEmployees();
                     break;
+                case "View all employees by last name":
+                    viewEmployeesLastName();
+                    break;
+                case "View all departments":
+                    viewAllDepartments();
+                    break;
+                case "View all roles":
+                    viewAllRoles();
+                    break
                 case "View all employees by department":
                     viewDepartments();
                     break;
@@ -83,9 +94,7 @@ function view() {
                 case "View all employees by role":
                     viewRoles();
                     break;
-                case "View all departments":
-                    viewAllDepartments();
-                    break;
+
             }
 
         })
@@ -93,7 +102,6 @@ function view() {
 
 function viewEmployees() {
     var query = "SELECT employees.id, CONCAT(employees.first_name, ' ', employees.last_name) AS Name, role.title AS Title, role.salary as Salary, department.name as Department, CONCAT(m.first_name, ' ', m.last_name) AS Manager FROM (((employees LEFT JOIN role ON employees.role_id = role.id) LEFT JOIN department ON role.department_id = department.id) LEFT JOIN employees m ON m.id = employees.manager_id)";
-
     connection.query(query, (err, res) => {
         if (err) throw err;
         console.table(res)
@@ -102,13 +110,15 @@ function viewEmployees() {
 
 }
 
-function viewDepartments() {
-    var query = "SELECT employees.id, CONCAT(employees.first_name, ' ',employees.last_name) AS Name, department.name AS Department FROM ((employees LEFT JOIN role ON employees.role_id = role.id) LEFT JOIN department ON role.department_id = department.id)";
+function viewEmployeesLastName() {
+    var query = "SELECT employees.id, employees.first_name AS 'First Name', employees.last_name AS 'Last Name', role.title AS Title, role.salary as Salary, department.name as Department, CONCAT(m.first_name, ' ', m.last_name) AS Manager FROM (((employees LEFT JOIN role ON employees.role_id = role.id) LEFT JOIN department ON role.department_id = department.id) LEFT JOIN employees m ON m.id = employees.manager_id) ORDER BY employees.last_name ASC";
     connection.query(query, (err, res) => {
         if (err) throw err;
         console.table(res)
         questions()
     })
+
+
 }
 
 function viewAllDepartments() {
@@ -120,8 +130,28 @@ function viewAllDepartments() {
     })
 }
 
+function viewAllRoles() {
+    var query = "SELECT role.id AS 'ID', title AS Title, department.name as Department, role.department_id AS 'Department ID', salary AS Salary FROM role LEFT JOIN department ON role.department_id = department.id";
+    connection.query(query, (err, res) => {
+        if (err) throw err;
+        console.table(res)
+        questions()
+    })
+}
+
+function viewDepartments() {
+    var query = "SELECT employees.id, CONCAT(employees.first_name, ' ',employees.last_name) AS Name, department.name AS Department FROM ((employees LEFT JOIN role ON employees.role_id = role.id) LEFT JOIN department ON role.department_id = department.id) ORDER BY department.name ASC";
+    connection.query(query, (err, res) => {
+        if (err) throw err;
+        console.table(res)
+        questions()
+    })
+}
+
+
+
 function viewManagers() {
-    var query = "SELECT employees.id, CONCAT(employees.first_name, ' ', employees.last_name) AS Name, CONCAT(m.first_name, ' ', m.last_name) AS Manager FROM employees LEFT JOIN employees m ON m.id = employees.manager_id";
+    var query = "SELECT employees.id, CONCAT(employees.first_name, ' ', employees.last_name) AS Name, CONCAT(m.first_name, ' ', m.last_name) AS Manager FROM employees LEFT JOIN employees m ON m.id = employees.manager_id ORDER BY CONCAT(m.first_name, ' ', m.last_name)";
     connection.query(query, (err, res) => {
         if (err) throw err;
         console.table(res)
@@ -130,7 +160,7 @@ function viewManagers() {
 }
 
 function viewRoles() {
-    var query = "SELECT employees.id, CONCAT(employees.first_name, ' ',employees.last_name) AS Name, role.title AS Role FROM employees LEFT JOIN role on employees.role_id = role.id"
+    var query = "SELECT employees.id, CONCAT(employees.first_name, ' ',employees.last_name) AS Name, role.title AS Role, department.name as Department FROM ((employees LEFT JOIN role on employees.role_id = role.id) LEFT JOIN department ON role.department_id = department.id)";
     connection.query(query, (err, res) => {
         if (err) throw err;
         console.table(res)
@@ -248,8 +278,7 @@ function addRole() {
         .then(function (answer) {
             var query = "INSERT INTO role (title, salary, department_id) VALUES(?,?,?)";
             connection.query(query, [answer.roleName, answer.salary, Number(answer.departmentID)], (err, res) => {
-                if (err) throw err;
-                console.log("Role added")
+                if (err) console.log("Department does not exist");
                 console.table(res)
                 questions()
             })
@@ -318,8 +347,7 @@ function removeDepartment() {
         .then(function (answer) {
             var query = "DELETE FROM department WHERE id=?";
             connection.query(query, [Number(answer.selectDepartmentId)], (err, res) => {
-                if (err) throw err;
-                console.log("Department deleted")
+                if (err) console.log("Must first change roles within department");
                 console.table(res)
                 questions()
             })
