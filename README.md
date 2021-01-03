@@ -1,6 +1,6 @@
 # Employee Tracker
 
-![image](https://user-images.githubusercontent.com/71417500/103471055-bed7ee00-4d40-11eb-8d84-f01fbb1f8a61.png)
+![image](https://user-images.githubusercontent.com/71417500/103471681-c26f7300-4d48-11eb-801b-850a238a0097.png)
 
 ## Link to User Video:
 
