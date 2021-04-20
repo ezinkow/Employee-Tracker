@@ -8,7 +8,7 @@ https://youtu.be/jOBB4E-YE8Q
 
 ## About This Project:
 
-This was a homework assignment as part of the Northwestern Coding Bootcamp to build a backend application that allows an employer to keep track of employees, their roles and departments.
+This is a backend application that allows an employer to keep track of employees, their roles and departments.
 
 This was built with Javascript, sql and Inquirer and uses node.
 
