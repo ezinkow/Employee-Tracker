@@ -21,6 +21,7 @@
     "console.table": "^0.10.0",
     "inquirer": "^7.3.3",
     "mysql": "^2.18.1",
+    "node": "^16.1.0",
     "npm-start-command": "^1.0.1",
     "start": "^5.1.0"
   }
